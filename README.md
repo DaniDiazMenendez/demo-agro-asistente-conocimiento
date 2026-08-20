@@ -16,7 +16,7 @@ Demo estatica e interactiva para GitHub Pages. Simula un asistente de conocimien
 2. Preguntas agronomicas frecuentes.
 3. Respuestas visibles con fuentes recuperadas de una base de conocimiento simulada.
 4. Capa predictiva por lote: rendimiento estimado, estres hidrico, riesgo de plaga y accion sugerida.
-5. Activacion de playbook operativo: tarea, notificacion y seguimiento.
+5. Recomendacion clara por lote: que hacer, por que y con que fuente.
 6. Vista ejecutiva con alertas, impacto y adopcion.
 7. Guion de demo y documentacion oficial.
 

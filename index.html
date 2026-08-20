@@ -550,7 +550,7 @@
 
     .prediction-panel {
       position: absolute;
-      top: 18px;
+      top: 64px;
       left: 18px;
       right: 18px;
       z-index: 2;
@@ -558,6 +558,28 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       pointer-events: none;
+    }
+
+    .map-title {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-panel-strong);
+      font-weight: 900;
+    }
+
+    .map-title span {
+      color: var(--cp-text-muted);
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .prediction-card {
@@ -714,22 +736,6 @@
     .source-list {
       display: grid;
       gap: 8px;
-    }
-
-    .query-history {
-      display: grid;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .history-item {
-      padding: 9px;
-      border: 1px solid var(--cp-border);
-      border-radius: 0.625rem;
-      background: var(--cp-surface-soft);
-      color: var(--cp-text-muted);
-      font-size: 12px;
-      line-height: 1.35;
     }
 
     .source {
@@ -940,6 +946,12 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         padding: 12px;
       }
+
+      .map-title {
+        position: relative;
+        inset: auto;
+        margin: 12px;
+      }
     }
 
     @media (max-width: 720px) {
@@ -976,25 +988,25 @@
     <main class="shell">
       <section class="hero">
         <div>
-          <span class="eyebrow">AGRO-01 · Copilot Studio + Azure AI Foundry · RAG</span>
-          <h1>Asistente de conocimiento agronomico para decisiones en campo</h1>
+          <span class="eyebrow">AGRO-01 · Copilot Studio + Azure AI Foundry + Fabric ML</span>
+          <h1>Decisiones agronomicas por lote, explicadas en simple</h1>
           <p class="lead">
             Demo interactiva para mostrar como una cooperativa o productor centraliza guias de cultivo,
-            clima, insumos, fichas de plagas y predicciones de Fabric Machine Learning. El agente responde con fuentes,
-            muestra pronosticos por lote y activa un flujo operativo. Porque buscar PDF en plena recorrida de lote es una prueba de paciencia, no de agronomia.
+            clima, insumos, fichas de plagas y predicciones de Fabric Machine Learning. La demo muestra una decision clara por lote:
+            que esta pasando, que predice el modelo y que recomienda el asistente. Porque buscar PDF en plena recorrida de lote es una prueba de paciencia, no de agronomia.
           </p>
           <div class="hero-actions">
-            <button class="btn primary" data-tab-target="campo">Probar asistente</button>
+            <button class="btn primary" data-tab-target="campo">Ver caso de campo</button>
             <button class="btn" data-tab-target="ejecutivo">Ver tablero ejecutivo</button>
             <button class="btn" data-tab-target="documentacion">Ver documentacion</button>
           </div>
         </div>
         <aside class="hero-card">
           <div>
-            <h2 class="card-title">Dolor que resuelve</h2>
+            <h2 class="card-title">Qué problema resuelve</h2>
             <p class="card-subtitle">
               El conocimiento esta disperso entre guias tecnicas, clima, insumos, observaciones de campo y modelos predictivos.
-              La demo convierte eso en respuestas accionables por lote.
+              La demo lo ordena en una recomendacion simple: que hacer ahora y por que.
             </p>
           </div>
           <div class="metric-grid">
@@ -1019,7 +1031,7 @@
       </section>
 
       <nav class="tabs" aria-label="Vistas de demo">
-        <button class="tab active" data-tab="campo">Vista de campo</button>
+        <button class="tab active" data-tab="campo">Caso de campo</button>
         <button class="tab" data-tab="ejecutivo">Vista ejecutiva</button>
         <button class="tab" data-tab="documentacion">Guion y documentacion</button>
       </nav>
@@ -1028,8 +1040,8 @@
         <div class="workbench">
           <aside class="card">
             <div class="card-header">
-              <h2 class="card-title">Contexto del lote</h2>
-              <p class="card-subtitle">Cambia cultivo, etapa y condicion. Las preguntas y respuestas se recalculan.</p>
+              <h2 class="card-title">1. Elegi lote y pregunta</h2>
+              <p class="card-subtitle">El productor selecciona el lote y consulta una duda concreta.</p>
             </div>
             <div class="card-body field-stack">
               <label>
@@ -1059,20 +1071,24 @@
                 </select>
               </label>
               <label>
-                Consulta al asistente
+                Pregunta del productor
                 <textarea id="questionInput">Cuando conviene sembrar maiz si el suelo esta fresco y hay lluvia prevista?</textarea>
               </label>
-              <button class="btn primary" id="askBtn">Consultar conocimiento</button>
+              <button class="btn primary" id="askBtn">Responder pregunta</button>
               <div class="quick-questions" id="quickQuestions"></div>
             </div>
           </aside>
 
           <section class="field-map" aria-label="Mapa de lotes">
+            <div class="map-title">
+              2. Prediccion del lote
+              <span>Modelo tipo Fabric ML sobre clima, suelo y scouting</span>
+            </div>
             <div class="prediction-panel" aria-label="Predicciones Fabric Machine Learning">
-              <div class="prediction-card"><strong id="predYield">8.6 t/ha</strong><span>rendimiento estimado</span><small>Fabric ML · confianza 87%</small></div>
-              <div class="prediction-card"><strong id="predWater">Medio</strong><span>estres hidrico 10 dias</span><small>Clima + humedad suelo</small></div>
-              <div class="prediction-card"><strong id="predPest">Bajo</strong><span>riesgo de plaga</span><small>Scoutings + clima</small></div>
-              <div class="prediction-card"><strong id="predAction">Sembrar</strong><span>accion recomendada</span><small>Modelo agronomico</small></div>
+              <div class="prediction-card"><strong id="predYield">8.6 t/ha</strong><span>1. rendimiento probable</span><small>Fabric ML · confianza 87%</small></div>
+              <div class="prediction-card"><strong id="predWater">Medio</strong><span>2. riesgo de agua</span><small>Clima + humedad suelo</small></div>
+              <div class="prediction-card"><strong id="predPest">Bajo</strong><span>3. riesgo de plaga</span><small>Scouting + clima</small></div>
+              <div class="prediction-card"><strong id="predAction">Sembrar</strong><span>4. recomendacion ML</span><small>Modelo agronomico</small></div>
             </div>
             <button class="plot plot-a active" data-plot="A12">
               <span><strong>Lote A12</strong><span>Maiz · humedad media</span></span>
@@ -1096,16 +1112,16 @@
 
           <aside class="card answer-panel" id="answerPanel">
             <div class="card-header">
-              <h2 class="card-title">Respuesta con fuentes</h2>
-              <p class="card-subtitle">Recupera conocimiento agronomico, lo combina con predicciones por lote y genera recomendacion.</p>
+              <h2 class="card-title">3. Respuesta al productor</h2>
+              <p class="card-subtitle">La respuesta combina documentos tecnicos + prediccion del lote.</p>
             </div>
             <div class="card-body answer-card">
               <div class="answer-callout">
-                Respuesta de conocimiento
+                Recomendacion clara
                 <span id="answerStamp">Lista para usar</span>
               </div>
               <div class="query-echo" id="queryEcho">
-                <strong>Consulta respondida</strong>
+                <strong>Pregunta respondida</strong>
                 Esperando pregunta del productor.
               </div>
               <div class="status-line" id="statusLine"></div>
@@ -1113,12 +1129,6 @@
               <div>
                 <h3 class="card-title">Fuentes recuperadas</h3>
                 <div class="source-list" id="sourceList"></div>
-              </div>
-              <button class="btn primary" id="activateFlow">Activar playbook de respuesta</button>
-              <div class="flow" id="flowBox"></div>
-              <div>
-                <h3 class="card-title">Historial de consultas</h3>
-                <div class="query-history" id="queryHistory"></div>
               </div>
             </div>
           </aside>
@@ -1218,25 +1228,25 @@
 
           <article class="card wide">
             <div class="card-header">
-              <h2 class="card-title">Playbook operacional</h2>
-              <p class="card-subtitle">Lo importante de la demo: el asistente no solo contesta; convierte conocimiento en accion.</p>
+              <h2 class="card-title">Lectura simple para negocio</h2>
+              <p class="card-subtitle">La demo se entiende como una secuencia de decision, sin jerga tecnica innecesaria.</p>
             </div>
             <div class="card-body flow">
               <div class="flow-step">
                 <div class="badge">1</div>
-                <div><strong>Detecta la consulta recurrente</strong><span>Ejemplo: ventana de siembra de maiz con pronostico de lluvia.</span></div>
+                <div><strong>Pregunta del productor</strong><span>Ejemplo: cuando sembrar, cuanto regar o que hacer ante una plaga.</span></div>
               </div>
               <div class="flow-step">
                 <div class="badge">2</div>
-                <div><strong>Responde con fuente</strong><span>Recupera guia tecnica, ficha del lote y dato climatico cargado.</span></div>
+                <div><strong>Lectura del lote</strong><span>El sistema muestra humedad, lluvia prevista, riesgo y prediccion de rendimiento.</span></div>
               </div>
               <div class="flow-step">
                 <div class="badge">3</div>
-                <div><strong>Activa seguimiento</strong><span>Crea tarea para agronomo, mensaje a cuadrilla o alerta si el riesgo supera umbral.</span></div>
+                <div><strong>Respuesta recomendada</strong><span>El asistente explica que hacer, por que y con que fuente tecnica.</span></div>
               </div>
               <div class="flow-step">
                 <div class="badge">4</div>
-                <div><strong>Mide adopcion</strong><span>El tablero muestra tiempo ahorrado, temas consultados y alertas abiertas.</span></div>
+                <div><strong>Impacto esperado</strong><span>Decisiones mas rapidas y menos dependencia de buscar informacion dispersa.</span></div>
               </div>
             </div>
           </article>
@@ -1252,7 +1262,7 @@
               <li>Seleccionar un lote y una etapa del cultivo.</li>
               <li>Preguntar: "Cuando conviene sembrar maiz?" o "Que hago con oruga en soja?".</li>
               <li>Mostrar respuesta con fuente recuperada, prediccion Fabric ML y accion recomendada.</li>
-              <li>Activar playbook: tarea tecnica, alerta o recomendacion de insumo.</li>
+              <li>Mostrar una recomendacion clara: respuesta tecnica, prediccion del lote y fuente.</li>
               <li>Cerrar con tablero ejecutivo: impacto, alertas y adopcion.</li>
             </ol>
           </article>
@@ -1283,7 +1293,7 @@
               <li><strong>Azure AI Foundry:</strong> seleccion de modelo, evaluacion y gestion de aplicaciones generativas.</li>
               <li><strong>Microsoft Fabric ML:</strong> entrenamiento y scoring sobre clima, sensores, historicos de rendimiento y scouting.</li>
               <li><strong>RAG:</strong> indexacion de guias y recuperacion de fragmentos antes de generar respuesta.</li>
-              <li><strong>Acciones:</strong> tareas, alertas o notificaciones a equipos de campo.</li>
+              <li><strong>Resultado:</strong> recomendacion clara para decidir si sembrar, monitorear, regar o escalar al agronomo.</li>
             </ul>
           </article>
 
@@ -1304,7 +1314,7 @@
               <li>Que hago si veo oruga y defoliacion en soja?</li>
               <li>Como priorizo nitrogeno en trigo con analisis bajo?</li>
               <li>Que lote requiere visita tecnica primero?</li>
-              <li>Que accion deberia activar para el equipo de campo?</li>
+              <li>Que recomendacion concreta recibe el productor?</li>
             </ul>
           </article>
         </div>
@@ -1369,12 +1379,12 @@
         ],
         answer: {
           title: "Alerta de plaga y scouting prioritario",
-          summary: "No conviene recomendar aplicacion solo por observacion aislada. Para B08, el playbook correcto es confirmar defoliacion, etapa y presencia activa, y activar visita tecnica en 24 horas.",
+          summary: "No conviene recomendar aplicacion solo por observacion aislada. Para B08, la decision clara es confirmar defoliacion, etapa y presencia activa antes de aplicar.",
           steps: [
             "Registrar sector, fotos y porcentaje estimado de defoliacion.",
             "Hacer scouting por paño vertical en varios puntos del lote.",
             "Si hay presencia activa y dano creciente, escalar a alerta operativa.",
-            "Enviar tarea al agronomo con evidencia y recomendacion preliminar."
+            "Consultar al agronomo con evidencia y recomendacion preliminar."
           ],
           risk: "Alto",
           confidence: "Media"
@@ -1465,12 +1475,9 @@
     const answerPanel = document.getElementById("answerPanel");
     const answerStamp = document.getElementById("answerStamp");
     const queryEcho = document.getElementById("queryEcho");
-    const queryHistory = document.getElementById("queryHistory");
     const sourceList = document.getElementById("sourceList");
     const statusLine = document.getElementById("statusLine");
-    const flowBox = document.getElementById("flowBox");
     const toast = document.getElementById("toast");
-    const recentQueries = [];
 
     function setTab(tabId) {
       document.querySelectorAll(".tab").forEach((tab) => {
@@ -1577,18 +1584,6 @@
         </div>
       `).join("");
 
-      addQueryHistory(question, plotId, prediction.action);
-      flowBox.innerHTML = "";
-    }
-
-    function addQueryHistory(question, plotId, action) {
-      if (!question) return;
-      const entry = `${plotId}: ${question} → ${action}`;
-      if (recentQueries[0] !== entry) {
-        recentQueries.unshift(entry);
-        recentQueries.splice(4);
-      }
-      queryHistory.innerHTML = recentQueries.map((item) => `<div class="history-item">${item}</div>`).join("");
     }
 
     function handleAsk() {
@@ -1598,7 +1593,7 @@
     }
 
     function nextAction(crop, plotId, risk) {
-      if (risk === "Alto" || crop === "soja") return `crear tarea de scouting para ${plotId} y notificar al agronomo.`;
+      if (risk === "Alto" || crop === "soja") return `hacer scouting en ${plotId} y confirmar evidencia antes de aplicar.`;
       if (crop === "trigo") return `validar analisis de suelo de ${plotId} antes de compra de insumo.`;
       return `programar siembra condicionada a temperatura de suelo y pronostico.`;
     }
@@ -1614,29 +1609,6 @@
       renderQuestions();
       questionInput.value = KB[cropSelect.value].questions[0];
       renderAnswer();
-    }
-
-    function activateFlow() {
-      const crop = cropSelect.value;
-      const plotId = plotSelect.value;
-      const plot = PLOTS[plotId];
-      const action = nextAction(crop, plotId, plot.risk);
-      flowBox.innerHTML = `
-        <div class="flow-step">
-          <div class="badge">1</div>
-          <div><strong>Tarea creada</strong><span>${action}</span></div>
-        </div>
-        <div class="flow-step">
-          <div class="badge">2</div>
-          <div><strong>Mensaje preparado</strong><span>Resumen tecnico con fuentes enviado al canal del equipo de campo.</span></div>
-        </div>
-        <div class="flow-step">
-          <div class="badge">3</div>
-          <div><strong>Seguimiento ejecutivo</strong><span>La alerta queda visible en el tablero con estado, impacto y responsable.</span></div>
-        </div>
-      `;
-      showToast(`Playbook activado para ${plotId}. En una demo real esto llamaria una accion de Copilot Studio o Power Automate.`);
-      document.getElementById("metricAlertas").textContent = "4";
     }
 
     function showToast(message) {
@@ -1668,7 +1640,6 @@
     plotSelect.addEventListener("change", syncPlotFromSelect);
     stageSelect.addEventListener("change", renderAnswer);
     document.getElementById("askBtn").addEventListener("click", handleAsk);
-    document.getElementById("activateFlow").addEventListener("click", activateFlow);
 
     renderQuestions();
     renderSensors();
