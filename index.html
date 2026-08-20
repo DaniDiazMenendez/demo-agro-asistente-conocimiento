@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGRO-01 | Asistente de conocimiento agronomico</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='50' font-size='48'%3E%F0%9F%8C%BE%3C/text%3E%3C/svg%3E">
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, var(--cp-accent-soft), transparent 34rem),
+        radial-gradient(circle at 85% 20%, var(--cp-highlight), transparent 28rem),
+        var(--cp-bg);
+      color: var(--cp-text);
+    }
+
+    a {
+      color: var(--cp-link);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .shell {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 24px;
+      padding: 28px;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-panel-strong);
+      box-shadow: var(--cp-shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -12% -38% auto;
+      width: 480px;
+      height: 480px;
+      border: 1px solid var(--cp-border);
+      border-radius: 50%;
+      background: var(--cp-accent-soft);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 999px;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 16px 0 12px;
+      font-size: clamp(34px, 5vw, 66px);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 0;
+      color: var(--cp-text-muted);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      padding: 11px 14px;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--cp-border-strong);
+    }
+
+    .btn.primary {
+      border-color: var(--cp-accent);
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      font-weight: 700;
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 1;
+      align-self: stretch;
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 14px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface-soft);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+
+    .metric span {
+      color: var(--cp-text-muted);
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0;
+      padding: 8px;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-panel);
+    }
+
+    .tab {
+      flex: 1 1 180px;
+      border: 1px solid transparent;
+      border-radius: 0.625rem;
+      padding: 10px 12px;
+      background: transparent;
+      color: var(--cp-text-muted);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tab.active {
+      border-color: var(--cp-border);
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .workbench {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr) minmax(300px, 380px);
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+
+    .card-header {
+      padding: 16px 16px 0;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 6px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .card-subtitle {
+      margin: 0;
+      color: var(--cp-text-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .field-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--cp-text-muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      padding: 10px 12px;
+      background: var(--cp-bg-elevated);
+      color: var(--cp-text);
+      outline: none;
+    }
+
+    select:focus,
+    textarea:focus {
+      border-color: var(--cp-accent);
+      box-shadow: 0 0 0 3px var(--cp-accent-soft);
+    }
+
+    textarea {
+      min-height: 98px;
+      resize: vertical;
+    }
+
+    .quick-questions {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .quick {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      padding: 10px;
+      background: var(--cp-surface-soft);
+      color: var(--cp-text);
+      cursor: pointer;
+    }
+
+    .quick:hover {
+      border-color: var(--cp-accent);
+      background: var(--cp-accent-soft);
+    }
+
+    .field-map {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--cp-border);
+      background:
+        linear-gradient(120deg, var(--cp-surface-soft), var(--cp-bg-elevated));
+    }
+
+    .field-map::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(42deg, transparent 0 28px, var(--cp-highlight) 29px 31px),
+        radial-gradient(circle at 20% 20%, var(--cp-accent-soft), transparent 18rem),
+        radial-gradient(circle at 74% 62%, var(--cp-accent-soft), transparent 16rem);
+      opacity: 0.9;
+    }
+
+    .plot {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--cp-border-strong);
+      background: var(--cp-panel);
+      color: var(--cp-text);
+      border-radius: 28px 12px 30px 12px;
+      box-shadow: var(--cp-shadow);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .plot:hover,
+    .plot.active {
+      transform: scale(1.025);
+      border-color: var(--cp-accent);
+      background: var(--cp-panel-strong);
+    }
+
+    .plot strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .plot span {
+      color: var(--cp-text-muted);
+      font-size: 12px;
+    }
+
+    .plot-a {
+      left: 7%;
+      top: 10%;
+      width: 35%;
+      height: 30%;
+    }
+
+    .plot-b {
+      right: 8%;
+      top: 14%;
+      width: 40%;
+      height: 24%;
+      border-radius: 16px 34px 16px 30px;
+    }
+
+    .plot-c {
+      left: 12%;
+      bottom: 12%;
+      width: 37%;
+      height: 30%;
+      border-radius: 34px 14px 22px 18px;
+    }
+
+    .plot-d {
+      right: 10%;
+      bottom: 11%;
+      width: 34%;
+      height: 34%;
+    }
+
+    .map-overlay {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      z-index: 1;
+    }
+
+    .sensor {
+      padding: 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-panel-strong);
+    }
+
+    .sensor b {
+      display: block;
+      font-size: 18px;
+    }
+
+    .sensor small {
+      color: var(--cp-text-muted);
+    }
+
+    .answer-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border: 1px solid var(--cp-border);
+      border-radius: 999px;
+      background: var(--cp-surface-soft);
+      color: var(--cp-text-muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill.good {
+      color: var(--cp-success);
+    }
+
+    .pill.warn {
+      color: var(--cp-warning);
+    }
+
+    .pill.risk {
+      color: var(--cp-danger);
+    }
+
+    .answer {
+      padding: 14px;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-bg-elevated);
+      line-height: 1.5;
+    }
+
+    .answer h3 {
+      margin: 0 0 10px;
+      font-size: 19px;
+      letter-spacing: -0.03em;
+    }
+
+    .answer ol {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .answer li {
+      margin: 8px 0;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .source {
+      padding: 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-accent-soft);
+    }
+
+    .source strong {
+      display: block;
+    }
+
+    .source span {
+      color: var(--cp-text-muted);
+      font-size: 13px;
+    }
+
+    .flow {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface-soft);
+    }
+
+    .badge {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--cp-accent);
+      color: var(--cp-accent-fg);
+      font-weight: 800;
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .flow-step span {
+      color: var(--cp-text-muted);
+      font-size: 13px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .heat-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .heat {
+      min-height: 72px;
+      padding: 8px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface-soft);
+    }
+
+    .heat.hot {
+      border-color: var(--cp-danger);
+      background: var(--cp-accent-soft);
+    }
+
+    .heat.mid {
+      border-color: var(--cp-warning);
+    }
+
+    .heat.good {
+      border-color: var(--cp-success);
+    }
+
+    .heat strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .heat small {
+      color: var(--cp-text-muted);
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      color: var(--cp-text-muted);
+      font-size: 13px;
+    }
+
+    .bar-track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--cp-surface-soft);
+      border: 1px solid var(--cp-border);
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: var(--value);
+      background: var(--cp-accent);
+    }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .doc-card {
+      padding: 16px;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+
+    .doc-card h3 {
+      margin: 0 0 8px;
+    }
+
+    .doc-card p,
+    .doc-card li {
+      color: var(--cp-text-muted);
+      line-height: 1.5;
+    }
+
+    .doc-card ul {
+      padding-left: 18px;
+    }
+
+    .mono {
+      font-family: Consolas, "Courier New", Courier, monospace;
+      font-size: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      max-width: 360px;
+      padding: 14px 16px;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-panel-strong);
+      color: var(--cp-text);
+      box-shadow: var(--cp-shadow);
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 20;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1180px) {
+      .hero,
+      .workbench,
+      .dashboard,
+      .doc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .map-overlay {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        padding: 12px;
+      }
+
+      .hero {
+        padding: 18px;
+      }
+
+      .metric-grid,
+      .map-overlay,
+      .heat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-map {
+        min-height: 680px;
+      }
+
+      .plot {
+        position: relative;
+        inset: auto;
+        width: auto;
+        height: 120px;
+        margin: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <span class="eyebrow">AGRO-01 · Copilot Studio + Azure AI Foundry · RAG</span>
+          <h1>Asistente de conocimiento agronomico para decisiones en campo</h1>
+          <p class="lead">
+            Demo interactiva para mostrar como una cooperativa o productor centraliza guias de cultivo,
+            clima, insumos y fichas de plagas. El agente responde con fuentes, recomienda acciones y
+            activa un flujo operativo. Porque buscar PDF en plena recorrida de lote es una prueba de paciencia, no de agronomia.
+          </p>
+          <div class="hero-actions">
+            <button class="btn primary" data-tab-target="campo">Probar asistente</button>
+            <button class="btn" data-tab-target="ejecutivo">Ver tablero ejecutivo</button>
+            <button class="btn" data-tab-target="documentacion">Ver documentacion</button>
+          </div>
+        </div>
+        <aside class="hero-card">
+          <div>
+            <h2 class="card-title">Dolor que resuelve</h2>
+            <p class="card-subtitle">
+              El conocimiento esta disperso entre guias tecnicas, notas de clima, recomendaciones de insumos
+              y criterio del agronomo. La demo convierte eso en respuestas accionables.
+            </p>
+          </div>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong id="metricConsultas">48</strong>
+              <span>consultas resueltas esta semana</span>
+            </div>
+            <div class="metric">
+              <strong id="metricTiempo">-62%</strong>
+              <span>tiempo buscando informacion</span>
+            </div>
+            <div class="metric">
+              <strong id="metricAlertas">3</strong>
+              <span>alertas agronomicas abiertas</span>
+            </div>
+            <div class="metric">
+              <strong id="metricLotes">4</strong>
+              <span>lotes monitoreados</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <nav class="tabs" aria-label="Vistas de demo">
+        <button class="tab active" data-tab="campo">Vista de campo</button>
+        <button class="tab" data-tab="ejecutivo">Vista ejecutiva</button>
+        <button class="tab" data-tab="documentacion">Guion y documentacion</button>
+      </nav>
+
+      <section class="panel active" id="campo">
+        <div class="workbench">
+          <aside class="card">
+            <div class="card-header">
+              <h2 class="card-title">Contexto del lote</h2>
+              <p class="card-subtitle">Cambia cultivo, etapa y condicion. Las preguntas y respuestas se recalculan.</p>
+            </div>
+            <div class="card-body field-stack">
+              <label>
+                Cultivo
+                <select id="cropSelect">
+                  <option value="maiz">Maiz</option>
+                  <option value="soja">Soja</option>
+                  <option value="trigo">Trigo</option>
+                </select>
+              </label>
+              <label>
+                Lote
+                <select id="plotSelect">
+                  <option value="A12">Lote A12 · Norte</option>
+                  <option value="B08">Lote B08 · Bajo</option>
+                  <option value="C21">Lote C21 · Oeste</option>
+                  <option value="D03">Lote D03 · Ensayo</option>
+                </select>
+              </label>
+              <label>
+                Etapa
+                <select id="stageSelect">
+                  <option value="siembra">Siembra</option>
+                  <option value="vegetativo">Vegetativo</option>
+                  <option value="floracion">Floracion</option>
+                  <option value="madurez">Madurez</option>
+                </select>
+              </label>
+              <label>
+                Consulta al asistente
+                <textarea id="questionInput">Cuando conviene sembrar maiz si el suelo esta fresco y hay lluvia prevista?</textarea>
+              </label>
+              <button class="btn primary" id="askBtn">Consultar conocimiento</button>
+              <div class="quick-questions" id="quickQuestions"></div>
+            </div>
+          </aside>
+
+          <section class="field-map" aria-label="Mapa de lotes">
+            <button class="plot plot-a active" data-plot="A12">
+              <span><strong>Lote A12</strong><span>Maiz · humedad media</span></span>
+            </button>
+            <button class="plot plot-b" data-plot="B08">
+              <span><strong>Lote B08</strong><span>Soja · presion de plaga</span></span>
+            </button>
+            <button class="plot plot-c" data-plot="C21">
+              <span><strong>Lote C21</strong><span>Trigo · nitrogeno bajo</span></span>
+            </button>
+            <button class="plot plot-d" data-plot="D03">
+              <span><strong>Lote D03</strong><span>Ensayo · riego calibrado</span></span>
+            </button>
+            <div class="map-overlay">
+              <div class="sensor"><b id="sensorPH">6.4</b><small>pH suelo</small></div>
+              <div class="sensor"><b id="sensorHum">28%</b><small>humedad util</small></div>
+              <div class="sensor"><b id="sensorRain">34 mm</b><small>lluvia 7 dias</small></div>
+              <div class="sensor"><b id="sensorRisk">Medio</b><small>riesgo agronomico</small></div>
+            </div>
+          </section>
+
+          <aside class="card">
+            <div class="card-header">
+              <h2 class="card-title">Respuesta con fuentes</h2>
+              <p class="card-subtitle">Simula RAG: recupera fragmentos de la base de conocimiento y genera recomendacion.</p>
+            </div>
+            <div class="card-body answer-card">
+              <div class="status-line" id="statusLine"></div>
+              <div class="answer" id="answerBox"></div>
+              <div>
+                <h3 class="card-title">Fuentes recuperadas</h3>
+                <div class="source-list" id="sourceList"></div>
+              </div>
+              <button class="btn primary" id="activateFlow">Activar playbook de respuesta</button>
+              <div class="flow" id="flowBox"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel" id="ejecutivo">
+        <div class="dashboard">
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">Resumen para cooperativa</h2>
+              <p class="card-subtitle">Traduce consultas tecnicas en prioridades claras para negocio y operacion.</p>
+            </div>
+            <div class="card-body">
+              <div class="metric-grid">
+                <div class="metric">
+                  <strong>18 h</strong>
+                  <span>ahorradas en consultas repetidas</span>
+                </div>
+                <div class="metric">
+                  <strong>91%</strong>
+                  <span>respuestas con fuente tecnica</span>
+                </div>
+                <div class="metric">
+                  <strong>12</strong>
+                  <span>recomendaciones accionadas</span>
+                </div>
+                <div class="metric">
+                  <strong>4</strong>
+                  <span>campanias/lotes priorizados</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h2 class="card-title">Temas mas consultados</h2>
+              <p class="card-subtitle">Donde el equipo pierde mas tiempo cuando no hay conocimiento centralizado.</p>
+            </div>
+            <div class="card-body bar-list">
+              <div class="bar-row">
+                <div class="bar-label"><span>Ventana de siembra</span><span>82%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="--value:82%"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Plagas y umbrales</span><span>74%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="--value:74%"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Riego / humedad</span><span>63%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="--value:63%"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label"><span>Fertilizacion</span><span>58%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="--value:58%"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card wide">
+            <div class="card-header">
+              <h2 class="card-title">Alertas explicadas para ejecutivos</h2>
+              <p class="card-subtitle">No muestra jerga: muestra impacto, causa probable y accion recomendada.</p>
+            </div>
+            <div class="card-body heat-grid">
+              <div class="heat hot">
+                <strong>B08</strong>
+                <small>Alta presion de oruga. Requiere scouting en 24 h.</small>
+              </div>
+              <div class="heat mid">
+                <strong>C21</strong>
+                <small>Nitrogeno bajo. Validar analisis antes de refertilizar.</small>
+              </div>
+              <div class="heat good">
+                <strong>A12</strong>
+                <small>Ventana de siembra favorable con humedad suficiente.</small>
+              </div>
+              <div class="heat mid">
+                <strong>D03</strong>
+                <small>Riego calibrado; monitorear evapotranspiracion.</small>
+              </div>
+              <div class="heat good">
+                <strong>Clima</strong>
+                <small>Lluvias moderadas previstas. Sin alerta de helada.</small>
+              </div>
+              <div class="heat mid">
+                <strong>Insumos</strong>
+                <small>Stock justo para curasemillas y nitrogeno.</small>
+              </div>
+              <div class="heat hot">
+                <strong>Operacion</strong>
+                <small>2 visitas tecnicas pendientes por priorizar.</small>
+              </div>
+            </div>
+          </article>
+
+          <article class="card wide">
+            <div class="card-header">
+              <h2 class="card-title">Playbook operacional</h2>
+              <p class="card-subtitle">Lo importante de la demo: el asistente no solo contesta; convierte conocimiento en accion.</p>
+            </div>
+            <div class="card-body flow">
+              <div class="flow-step">
+                <div class="badge">1</div>
+                <div><strong>Detecta la consulta recurrente</strong><span>Ejemplo: ventana de siembra de maiz con pronostico de lluvia.</span></div>
+              </div>
+              <div class="flow-step">
+                <div class="badge">2</div>
+                <div><strong>Responde con fuente</strong><span>Recupera guia tecnica, ficha del lote y dato climatico cargado.</span></div>
+              </div>
+              <div class="flow-step">
+                <div class="badge">3</div>
+                <div><strong>Activa seguimiento</strong><span>Crea tarea para agronomo, mensaje a cuadrilla o alerta si el riesgo supera umbral.</span></div>
+              </div>
+              <div class="flow-step">
+                <div class="badge">4</div>
+                <div><strong>Mide adopcion</strong><span>El tablero muestra tiempo ahorrado, temas consultados y alertas abiertas.</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="documentacion">
+        <div class="doc-grid">
+          <article class="doc-card">
+            <h3>Guion de demo</h3>
+            <ol>
+              <li>Mostrar el problema: informacion agronomica dispersa entre documentos, clima e insumos.</li>
+              <li>Seleccionar un lote y una etapa del cultivo.</li>
+              <li>Preguntar: "Cuando conviene sembrar maiz?" o "Que hago con oruga en soja?".</li>
+              <li>Mostrar respuesta con fuente recuperada y accion recomendada.</li>
+              <li>Activar playbook: tarea tecnica, alerta o recomendacion de insumo.</li>
+              <li>Cerrar con tablero ejecutivo: impacto, alertas y adopcion.</li>
+            </ol>
+          </article>
+
+          <article class="doc-card">
+            <h3>Base de conocimiento simulada</h3>
+            <ul>
+              <li>Guia de cultivo de maiz: ventana de siembra, temperatura de suelo, humedad y densidad.</li>
+              <li>Guia de soja: plagas, umbrales de defoliacion y monitoreo.</li>
+              <li>Guia de trigo: nitrogeno, enfermedades foliares y oportunidad de aplicacion.</li>
+              <li>Ficha del lote: pH, humedad util, lluvia prevista, riesgo y observaciones.</li>
+            </ul>
+          </article>
+
+          <article class="doc-card">
+            <h3>Instrucciones del agente</h3>
+            <p class="mono">
+              Sos un asistente agronomico. Responde solo usando la base cargada. Si falta informacion,
+              pedi el dato faltante. Siempre entrega: recomendacion, fundamento, riesgo, siguiente accion y fuentes.
+            </p>
+          </article>
+
+          <article class="doc-card">
+            <h3>Arquitectura conceptual</h3>
+            <ul>
+              <li><strong>Copilot Studio:</strong> experiencia conversacional, temas, acciones y canales.</li>
+              <li><strong>Azure AI Foundry:</strong> seleccion de modelo, evaluacion y gestion de aplicaciones generativas.</li>
+              <li><strong>RAG:</strong> indexacion de guias y recuperacion de fragmentos antes de generar respuesta.</li>
+              <li><strong>Acciones:</strong> tareas, alertas o notificaciones a equipos de campo.</li>
+            </ul>
+          </article>
+
+          <article class="doc-card">
+            <h3>Documentacion oficial</h3>
+            <ul>
+              <li><a href="https://learn.microsoft.com/microsoft-copilot-studio/" target="_blank" rel="noreferrer">Microsoft Copilot Studio documentation</a></li>
+              <li><a href="https://learn.microsoft.com/azure/ai-foundry/" target="_blank" rel="noreferrer">Azure AI Foundry documentation</a></li>
+              <li><a href="https://learn.microsoft.com/azure/search/retrieval-augmented-generation-overview" target="_blank" rel="noreferrer">Retrieval Augmented Generation en Azure AI Search</a></li>
+              <li><a href="https://learn.microsoft.com/microsoft-copilot-studio/advanced-generative-actions" target="_blank" rel="noreferrer">Generative actions en Copilot Studio</a></li>
+            </ul>
+          </article>
+
+          <article class="doc-card">
+            <h3>Preguntas de prueba</h3>
+            <ul>
+              <li>Cuando conviene sembrar maiz si el suelo esta fresco?</li>
+              <li>Que hago si veo oruga y defoliacion en soja?</li>
+              <li>Como priorizo nitrogeno en trigo con analisis bajo?</li>
+              <li>Que lote requiere visita tecnica primero?</li>
+              <li>Que accion deberia activar para el equipo de campo?</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const KB = {
+      maiz: {
+        label: "Maiz",
+        questions: [
+          "Cuando conviene sembrar maiz si el suelo esta fresco y hay lluvia prevista?",
+          "Que densidad recomendas para un lote con humedad media?",
+          "Conviene esperar si la temperatura del suelo esta baja?"
+        ],
+        docs: [
+          {
+            id: "GUIA-MAIZ-SIEMBRA-01",
+            title: "Guia tecnica de maiz · ventana de siembra",
+            text: "Para maiz, priorizar siembra cuando el suelo tenga temperatura estable mayor a 10 grados, humedad util suficiente y pronostico sin excesos de lluvia en las siguientes 48 horas. Si el suelo esta fresco, esperar estabilidad termica reduce emergencia despareja."
+          },
+          {
+            id: "FICHA-MAIZ-DENSIDAD-02",
+            title: "Ficha de manejo de densidad",
+            text: "En ambientes de humedad media se recomienda ajustar densidad a potencial del lote y evitar sobrepoblacion si el pronostico indica estres hidrico. La decision debe considerar hibrido, fecha y disponibilidad de agua."
+          }
+        ],
+        answer: {
+          title: "Ventana de siembra recomendada",
+          summary: "La recomendacion es sembrar cuando la temperatura del suelo se estabilice y no haya exceso de lluvia inmediato. Con humedad media, el lote A12 esta favorable pero requiere validar temperatura antes de entrar.",
+          steps: [
+            "Medir temperatura de suelo temprano y repetir al mediodia para confirmar estabilidad.",
+            "Si supera el umbral tecnico y el pronostico no marca lluvia intensa en 48 h, avanzar con siembra.",
+            "Ajustar densidad al potencial del lote para no forzar consumo de agua.",
+            "Registrar fecha, hibrido y condicion inicial para trazabilidad del agente."
+          ],
+          risk: "Medio",
+          confidence: "Alta"
+        }
+      },
+      soja: {
+        label: "Soja",
+        questions: [
+          "Que hago si veo oruga y defoliacion en soja?",
+          "Cuando una plaga pasa a ser alerta operativa?",
+          "Que datos necesito antes de recomendar aplicacion?"
+        ],
+        docs: [
+          {
+            id: "GUIA-SOJA-PLAGAS-03",
+            title: "Guia tecnica de soja · monitoreo de orugas",
+            text: "En soja, la decision ante orugas debe basarse en porcentaje de defoliacion, etapa del cultivo y presencia activa. Se recomienda scouting por paño vertical y registro por sectores antes de definir aplicacion."
+          },
+          {
+            id: "FICHA-SOJA-UMBRAL-04",
+            title: "Ficha de umbrales y accion",
+            text: "Si la defoliacion crece rapidamente o se confirma presencia activa en sectores repetidos, activar visita tecnica y priorizar monitoreo en 24 horas. Evitar recomendaciones sin dato de estadio y nivel de dano."
+          }
+        ],
+        answer: {
+          title: "Alerta de plaga y scouting prioritario",
+          summary: "No conviene recomendar aplicacion solo por observacion aislada. Para B08, el playbook correcto es confirmar defoliacion, etapa y presencia activa, y activar visita tecnica en 24 horas.",
+          steps: [
+            "Registrar sector, fotos y porcentaje estimado de defoliacion.",
+            "Hacer scouting por paño vertical en varios puntos del lote.",
+            "Si hay presencia activa y dano creciente, escalar a alerta operativa.",
+            "Enviar tarea al agronomo con evidencia y recomendacion preliminar."
+          ],
+          risk: "Alto",
+          confidence: "Media"
+        }
+      },
+      trigo: {
+        label: "Trigo",
+        questions: [
+          "Como priorizo nitrogeno en trigo con analisis bajo?",
+          "Que hago si aparecen manchas foliares despues de lluvia?",
+          "Cuando conviene refertilizar?"
+        ],
+        docs: [
+          {
+            id: "GUIA-TRIGO-NITROGENO-05",
+            title: "Guia tecnica de trigo · nitrogeno",
+            text: "En trigo, la refertilizacion debe decidirse con analisis de suelo, expectativa de rendimiento, humedad disponible y etapa fenologica. Nitrogeno bajo requiere priorizacion, pero no reemplaza validacion de campo."
+          },
+          {
+            id: "FICHA-TRIGO-SANIDAD-06",
+            title: "Ficha sanitaria de trigo",
+            text: "Luego de lluvias y alta humedad, monitorear enfermedades foliares. La accion recomendada es visita de seguimiento si hay manchas activas y condiciones predisponentes."
+          }
+        ],
+        answer: {
+          title: "Priorizacion de nitrogeno con validacion",
+          summary: "El lote C21 requiere validacion de campo antes de refertilizar. La base indica combinar analisis, humedad y expectativa de rendimiento para evitar una decision cara con poca evidencia.",
+          steps: [
+            "Revisar analisis de suelo y objetivo de rendimiento.",
+            "Validar humedad disponible para que la aplicacion tenga respuesta.",
+            "Cruzar etapa fenologica con oportunidad de refertilizacion.",
+            "Crear recomendacion final solo si el agronomo confirma condicion del lote."
+          ],
+          risk: "Medio",
+          confidence: "Alta"
+        }
+      }
+    };
+
+    const PLOTS = {
+      A12: { crop: "maiz", stage: "siembra", ph: "6.4", hum: "28%", rain: "34 mm", risk: "Medio" },
+      B08: { crop: "soja", stage: "vegetativo", ph: "6.1", hum: "22%", rain: "18 mm", risk: "Alto" },
+      C21: { crop: "trigo", stage: "floracion", ph: "6.8", hum: "31%", rain: "27 mm", risk: "Medio" },
+      D03: { crop: "maiz", stage: "vegetativo", ph: "6.5", hum: "35%", rain: "12 mm", risk: "Bajo" }
+    };
+
+    const cropSelect = document.getElementById("cropSelect");
+    const plotSelect = document.getElementById("plotSelect");
+    const stageSelect = document.getElementById("stageSelect");
+    const questionInput = document.getElementById("questionInput");
+    const quickQuestions = document.getElementById("quickQuestions");
+    const answerBox = document.getElementById("answerBox");
+    const sourceList = document.getElementById("sourceList");
+    const statusLine = document.getElementById("statusLine");
+    const flowBox = document.getElementById("flowBox");
+    const toast = document.getElementById("toast");
+
+    function setTab(tabId) {
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.tab === tabId);
+      });
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === tabId);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function normalize(text) {
+      return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function retrieveDocs(crop, question) {
+      const terms = normalize(question).split(/\W+/).filter((term) => term.length > 3);
+      return KB[crop].docs
+        .map((doc) => {
+          const haystack = normalize(`${doc.title} ${doc.text}`);
+          const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
+          return { ...doc, score };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 2);
+    }
+
+    function renderQuestions() {
+      const crop = cropSelect.value;
+      quickQuestions.innerHTML = "";
+      KB[crop].questions.forEach((question) => {
+        const btn = document.createElement("button");
+        btn.className = "quick";
+        btn.type = "button";
+        btn.textContent = question;
+        btn.addEventListener("click", () => {
+          questionInput.value = question;
+          renderAnswer();
+        });
+        quickQuestions.appendChild(btn);
+      });
+    }
+
+    function renderSensors() {
+      const plot = PLOTS[plotSelect.value];
+      document.getElementById("sensorPH").textContent = plot.ph;
+      document.getElementById("sensorHum").textContent = plot.hum;
+      document.getElementById("sensorRain").textContent = plot.rain;
+      document.getElementById("sensorRisk").textContent = plot.risk;
+    }
+
+    function riskClass(risk) {
+      if (risk === "Alto") return "risk";
+      if (risk === "Medio") return "warn";
+      return "good";
+    }
+
+    function renderAnswer() {
+      const crop = cropSelect.value;
+      const stage = stageSelect.value;
+      const plotId = plotSelect.value;
+      const data = KB[crop];
+      const plot = PLOTS[plotId];
+      const docs = retrieveDocs(crop, questionInput.value);
+      const answer = data.answer;
+
+      statusLine.innerHTML = `
+        <span class="pill">Cultivo: ${data.label}</span>
+        <span class="pill">Etapa: ${stage}</span>
+        <span class="pill ${riskClass(answer.risk)}">Riesgo: ${answer.risk}</span>
+        <span class="pill good">Confianza: ${answer.confidence}</span>
+      `;
+
+      answerBox.innerHTML = `
+        <h3>${answer.title}</h3>
+        <p>${answer.summary}</p>
+        <ol>${answer.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
+        <p><strong>Siguiente mejor accion:</strong> ${nextAction(crop, plotId, plot.risk)}</p>
+      `;
+
+      sourceList.innerHTML = docs.map((doc) => `
+        <div class="source">
+          <strong>${doc.id}</strong>
+          <span>${doc.title}</span>
+        </div>
+      `).join("");
+
+      flowBox.innerHTML = "";
+    }
+
+    function nextAction(crop, plotId, risk) {
+      if (risk === "Alto" || crop === "soja") return `crear tarea de scouting para ${plotId} y notificar al agronomo.`;
+      if (crop === "trigo") return `validar analisis de suelo de ${plotId} antes de compra de insumo.`;
+      return `programar siembra condicionada a temperatura de suelo y pronostico.`;
+    }
+
+    function syncPlotFromSelect() {
+      const plot = PLOTS[plotSelect.value];
+      cropSelect.value = plot.crop;
+      stageSelect.value = plot.stage;
+      document.querySelectorAll(".plot").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.plot === plotSelect.value);
+      });
+      renderSensors();
+      renderQuestions();
+      questionInput.value = KB[cropSelect.value].questions[0];
+      renderAnswer();
+    }
+
+    function activateFlow() {
+      const crop = cropSelect.value;
+      const plotId = plotSelect.value;
+      const plot = PLOTS[plotId];
+      const action = nextAction(crop, plotId, plot.risk);
+      flowBox.innerHTML = `
+        <div class="flow-step">
+          <div class="badge">1</div>
+          <div><strong>Tarea creada</strong><span>${action}</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="badge">2</div>
+          <div><strong>Mensaje preparado</strong><span>Resumen tecnico con fuentes enviado al canal del equipo de campo.</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="badge">3</div>
+          <div><strong>Seguimiento ejecutivo</strong><span>La alerta queda visible en el tablero con estado, impacto y responsable.</span></div>
+        </div>
+      `;
+      showToast(`Playbook activado para ${plotId}. En una demo real esto llamaria una accion de Copilot Studio o Power Automate.`);
+      document.getElementById("metricAlertas").textContent = "4";
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    document.querySelectorAll("[data-tab]").forEach((tab) => {
+      tab.addEventListener("click", () => setTab(tab.dataset.tab));
+    });
+
+    document.querySelectorAll("[data-tab-target]").forEach((button) => {
+      button.addEventListener("click", () => setTab(button.dataset.tabTarget));
+    });
+
+    document.querySelectorAll(".plot").forEach((plot) => {
+      plot.addEventListener("click", () => {
+        plotSelect.value = plot.dataset.plot;
+        syncPlotFromSelect();
+      });
+    });
+
+    cropSelect.addEventListener("change", () => {
+      renderQuestions();
+      questionInput.value = KB[cropSelect.value].questions[0];
+      renderAnswer();
+    });
+    plotSelect.addEventListener("change", syncPlotFromSelect);
+    stageSelect.addEventListener("change", renderAnswer);
+    document.getElementById("askBtn").addEventListener("click", renderAnswer);
+    document.getElementById("activateFlow").addEventListener("click", activateFlow);
+
+    renderQuestions();
+    renderSensors();
+    renderAnswer();
+  </script>
+</body>
+</html>
