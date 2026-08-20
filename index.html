@@ -67,36 +67,36 @@
       --cp-highlight: rgba(253, 142, 161, 0.12);
     }
     :root {
-      --cp-bg: #fff7ed;
-      --cp-bg-elevated: #fffbeb;
+      --cp-bg: #f4f7ed;
+      --cp-bg-elevated: #fbfbf1;
       --cp-surface: #ffffff;
-      --cp-surface-soft: #fff1d6;
-      --cp-border: #f4c27a;
-      --cp-border-strong: #d97706;
-      --cp-accent: #ea580c;
-      --cp-accent-hover: #c2410c;
-      --cp-accent-soft: rgba(234, 88, 12, 0.14);
+      --cp-surface-soft: #eef5df;
+      --cp-border: #d6e2bd;
+      --cp-border-strong: #7a9b45;
+      --cp-accent: #4f7d28;
+      --cp-accent-hover: #3d621f;
+      --cp-accent-soft: rgba(79, 125, 40, 0.13);
       --cp-accent-fg: #ffffff;
-      --cp-success: #65a30d;
-      --cp-warning: #d97706;
-      --cp-link: #b45309;
-      --cp-highlight: rgba(250, 204, 21, 0.2);
+      --cp-success: #4d7c0f;
+      --cp-warning: #b7791f;
+      --cp-link: #3d621f;
+      --cp-highlight: rgba(217, 164, 65, 0.18);
     }
     html[data-theme="dark"] {
-      --cp-bg: #2b1b0f;
-      --cp-bg-elevated: #23170d;
-      --cp-surface: #241a12;
-      --cp-surface-soft: #332315;
-      --cp-border: #6f4216;
-      --cp-border-strong: #f59e0b;
-      --cp-accent: #fbbf24;
-      --cp-accent-hover: #fcd34d;
-      --cp-accent-soft: rgba(251, 191, 36, 0.16);
-      --cp-accent-fg: #1a1209;
+      --cp-bg: #182315;
+      --cp-bg-elevated: #132010;
+      --cp-surface: #1c2718;
+      --cp-surface-soft: #23331d;
+      --cp-border: #405b32;
+      --cp-border-strong: #a3c66d;
+      --cp-accent: #a3e635;
+      --cp-accent-hover: #bef264;
+      --cp-accent-soft: rgba(163, 230, 53, 0.15);
+      --cp-accent-fg: #10180c;
       --cp-success: #bef264;
-      --cp-warning: #fbbf24;
-      --cp-link: #facc15;
-      --cp-highlight: rgba(234, 88, 12, 0.16);
+      --cp-warning: #facc15;
+      --cp-link: #bef264;
+      --cp-highlight: rgba(217, 164, 65, 0.14);
     }
 
     * {
@@ -336,6 +336,52 @@
     .field-stack {
       display: grid;
       gap: 12px;
+    }
+
+    .scenario-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .scenario-card {
+      display: grid;
+      gap: 6px;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, var(--cp-surface), var(--cp-surface-soft)),
+        var(--cp-surface);
+      color: var(--cp-text);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .scenario-card:hover,
+    .scenario-card.active {
+      transform: translateY(-1px);
+      border-color: var(--cp-accent);
+      background:
+        linear-gradient(135deg, var(--cp-accent-soft), var(--cp-surface)),
+        var(--cp-surface);
+    }
+
+    .scenario-card strong {
+      font-size: 15px;
+    }
+
+    .scenario-card span {
+      color: var(--cp-text-muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .control-divider {
+      height: 1px;
+      background: var(--cp-border);
+      margin: 4px 0;
     }
 
     label {
@@ -631,6 +677,31 @@
       background: var(--cp-accent-soft);
       color: var(--cp-text);
       font-weight: 800;
+    }
+
+    .decision-banner {
+      padding: 14px;
+      border: 2px solid var(--cp-accent);
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, var(--cp-accent-soft), var(--cp-surface)),
+        var(--cp-surface);
+    }
+
+    .decision-banner span {
+      display: block;
+      color: var(--cp-text-muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .decision-banner strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 22px;
+      letter-spacing: -0.04em;
     }
 
     .answer-callout span {
@@ -989,11 +1060,11 @@
       <section class="hero">
         <div>
           <span class="eyebrow">AGRO-01 · Copilot Studio + Azure AI Foundry + Fabric ML</span>
-          <h1>Decisiones agronomicas por lote, explicadas en simple</h1>
+          <h1>Asistente agronomico para decidir mejor en cada lote</h1>
           <p class="lead">
             Demo interactiva para mostrar como una cooperativa o productor centraliza guias de cultivo,
-            clima, insumos, fichas de plagas y predicciones de Fabric Machine Learning. La demo muestra una decision clara por lote:
-            que esta pasando, que predice el modelo y que recomienda el asistente. Porque buscar PDF en plena recorrida de lote es una prueba de paciencia, no de agronomia.
+            Una demo guiada para mostrar, en minutos, como un productor pregunta sobre siembra, plagas o fertilizacion
+            y recibe una decision sugerida con datos del lote, prediccion y fuentes tecnicas.
           </p>
           <div class="hero-actions">
             <button class="btn primary" data-tab-target="campo">Ver caso de campo</button>
@@ -1003,10 +1074,10 @@
         </div>
         <aside class="hero-card">
           <div>
-            <h2 class="card-title">Qué problema resuelve</h2>
+            <h2 class="card-title">Historia para contar al cliente</h2>
             <p class="card-subtitle">
-              El conocimiento esta disperso entre guias tecnicas, clima, insumos, observaciones de campo y modelos predictivos.
-              La demo lo ordena en una recomendacion simple: que hacer ahora y por que.
+              El productor no quiere leer diez documentos. Quiere saber que hacer en este lote, hoy, con evidencia.
+              Esta demo muestra esa respuesta en tres clics.
             </p>
           </div>
           <div class="metric-grid">
@@ -1040,10 +1111,25 @@
         <div class="workbench">
           <aside class="card">
             <div class="card-header">
-              <h2 class="card-title">1. Elegi lote y pregunta</h2>
-              <p class="card-subtitle">El productor selecciona el lote y consulta una duda concreta.</p>
+              <h2 class="card-title">1. Elegi un caso de demo</h2>
+              <p class="card-subtitle">Tres historias listas para presentar frente a un cliente agro.</p>
             </div>
             <div class="card-body field-stack">
+              <div class="scenario-list" id="scenarioList">
+                <button class="scenario-card active" type="button" data-scenario="siembra">
+                  <strong>🌽 Siembra de maiz</strong>
+                  <span>El productor pregunta si conviene sembrar con suelo fresco y lluvia prevista.</span>
+                </button>
+                <button class="scenario-card" type="button" data-scenario="plaga">
+                  <strong>🪲 Plaga en soja</strong>
+                  <span>El encargado ve defoliacion y necesita decidir si escala o espera.</span>
+                </button>
+                <button class="scenario-card" type="button" data-scenario="fertilizacion">
+                  <strong>🌱 Nitrogeno en trigo</strong>
+                  <span>El lote muestra nitrogeno bajo y el productor necesita priorizar gasto.</span>
+                </button>
+              </div>
+              <div class="control-divider"></div>
               <label>
                 Cultivo
                 <select id="cropSelect">
@@ -1074,14 +1160,14 @@
                 Pregunta del productor
                 <textarea id="questionInput">Cuando conviene sembrar maiz si el suelo esta fresco y hay lluvia prevista?</textarea>
               </label>
-              <button class="btn primary" id="askBtn">Responder pregunta</button>
+              <button class="btn primary" id="askBtn">Ver decision sugerida</button>
               <div class="quick-questions" id="quickQuestions"></div>
             </div>
           </aside>
 
           <section class="field-map" aria-label="Mapa de lotes">
             <div class="map-title">
-              2. Prediccion del lote
+              2. Señales del lote
               <span>Modelo tipo Fabric ML sobre clima, suelo y scouting</span>
             </div>
             <div class="prediction-panel" aria-label="Predicciones Fabric Machine Learning">
@@ -1112,16 +1198,16 @@
 
           <aside class="card answer-panel" id="answerPanel">
             <div class="card-header">
-              <h2 class="card-title">3. Respuesta al productor</h2>
-              <p class="card-subtitle">La respuesta combina documentos tecnicos + prediccion del lote.</p>
+              <h2 class="card-title">3. Decision sugerida</h2>
+              <p class="card-subtitle">Respuesta lista para explicar: recomendacion, motivo y fuentes.</p>
             </div>
             <div class="card-body answer-card">
               <div class="answer-callout">
-                Recomendacion clara
+                Resultado para el productor
                 <span id="answerStamp">Lista para usar</span>
               </div>
               <div class="query-echo" id="queryEcho">
-                <strong>Pregunta respondida</strong>
+                <strong>Pregunta del productor</strong>
                 Esperando pregunta del productor.
               </div>
               <div class="status-line" id="statusLine"></div>
@@ -1262,7 +1348,7 @@
               <li>Seleccionar un lote y una etapa del cultivo.</li>
               <li>Preguntar: "Cuando conviene sembrar maiz?" o "Que hago con oruga en soja?".</li>
               <li>Mostrar respuesta con fuente recuperada, prediccion Fabric ML y accion recomendada.</li>
-              <li>Mostrar una recomendacion clara: respuesta tecnica, prediccion del lote y fuente.</li>
+              <li>Mostrar una decision sugerida: respuesta tecnica, prediccion del lote y fuente.</li>
               <li>Cerrar con tablero ejecutivo: impacto, alertas y adopcion.</li>
             </ol>
           </article>
@@ -1466,6 +1552,21 @@
       }
     };
 
+    const SCENARIOS = {
+      siembra: {
+        plot: "A12",
+        question: "Cuando conviene sembrar maiz si el suelo esta fresco y hay lluvia prevista?"
+      },
+      plaga: {
+        plot: "B08",
+        question: "Que hago si veo oruga y defoliacion en soja?"
+      },
+      fertilizacion: {
+        plot: "C21",
+        question: "Como priorizo nitrogeno en trigo con analisis bajo?"
+      }
+    };
+
     const cropSelect = document.getElementById("cropSelect");
     const plotSelect = document.getElementById("plotSelect");
     const stageSelect = document.getElementById("stageSelect");
@@ -1478,6 +1579,7 @@
     const sourceList = document.getElementById("sourceList");
     const statusLine = document.getElementById("statusLine");
     const toast = document.getElementById("toast");
+    let activeScenario = "siembra";
 
     function setTab(tabId) {
       document.querySelectorAll(".tab").forEach((tab) => {
@@ -1556,7 +1658,7 @@
       const question = questionInput.value.trim();
 
       queryEcho.innerHTML = `
-        <strong>Consulta respondida</strong>
+        <strong>Pregunta del productor</strong>
         ${question}
       `;
 
@@ -1569,11 +1671,15 @@
       `;
 
       answerBox.innerHTML = `
+        <div class="decision-banner">
+          <span>Decision sugerida para ${plotId}</span>
+          <strong>${decisionLabel(crop, plotId, plot.risk)}</strong>
+        </div>
         <h3>${answer.title}</h3>
         <p class="answer-summary">${answer.summary}</p>
         <ol>${answer.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
         <div class="ml-insight"><strong>Prediccion Fabric ML:</strong> ${prediction.insight}</div>
-        <p class="next-action"><strong>Siguiente mejor accion:</strong> ${nextAction(crop, plotId, plot.risk)}</p>
+        <p class="next-action"><strong>Por que:</strong> ${nextAction(crop, plotId, plot.risk)}</p>
       `;
       answerStamp.textContent = `${data.label} · ${plotId} · ${new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`;
 
@@ -1593,9 +1699,34 @@
     }
 
     function nextAction(crop, plotId, risk) {
-      if (risk === "Alto" || crop === "soja") return `hacer scouting en ${plotId} y confirmar evidencia antes de aplicar.`;
-      if (crop === "trigo") return `validar analisis de suelo de ${plotId} antes de compra de insumo.`;
-      return `programar siembra condicionada a temperatura de suelo y pronostico.`;
+      if (risk === "Alto" || crop === "soja") return `hay riesgo alto de plaga y conviene confirmar evidencia en campo antes de aplicar insumo.`;
+      if (crop === "trigo") return `el modelo sugiere respuesta posible, pero el gasto depende de confirmar nitrogeno y humedad disponible.`;
+      return `la humedad es suficiente y la ventana es favorable si la temperatura del suelo se estabiliza.`;
+    }
+
+    function decisionLabel(crop, plotId, risk) {
+      if (risk === "Alto" || crop === "soja") return "Hacer scouting antes de aplicar";
+      if (crop === "trigo") return "Validar nitrogeno antes de refertilizar";
+      return "Sembrar si se confirma temperatura de suelo";
+    }
+
+    function applyScenario(scenarioId) {
+      activeScenario = scenarioId;
+      const scenario = SCENARIOS[scenarioId];
+      plotSelect.value = scenario.plot;
+      const plot = PLOTS[scenario.plot];
+      cropSelect.value = plot.crop;
+      stageSelect.value = plot.stage;
+      questionInput.value = scenario.question;
+      document.querySelectorAll(".scenario-card").forEach((card) => {
+        card.classList.toggle("active", card.dataset.scenario === scenarioId);
+      });
+      document.querySelectorAll(".plot").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.plot === scenario.plot);
+      });
+      renderSensors();
+      renderQuestions();
+      renderAnswer();
     }
 
     function syncPlotFromSelect() {
@@ -1608,6 +1739,8 @@
       renderSensors();
       renderQuestions();
       questionInput.value = KB[cropSelect.value].questions[0];
+      activeScenario = "";
+      document.querySelectorAll(".scenario-card").forEach((card) => card.classList.remove("active"));
       renderAnswer();
     }
 
@@ -1630,6 +1763,10 @@
         plotSelect.value = plot.dataset.plot;
         syncPlotFromSelect();
       });
+    });
+
+    document.querySelectorAll(".scenario-card").forEach((card) => {
+      card.addEventListener("click", () => applyScenario(card.dataset.scenario));
     });
 
     cropSelect.addEventListener("change", () => {
