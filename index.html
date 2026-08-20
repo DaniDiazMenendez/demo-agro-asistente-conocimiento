@@ -436,6 +436,12 @@
       background: var(--cp-accent-soft);
     }
 
+    .quick.active {
+      border-color: var(--cp-accent);
+      background: var(--cp-accent-soft);
+      font-weight: 800;
+    }
+
     .field-map {
       position: relative;
       min-height: 640px;
@@ -1112,7 +1118,7 @@
           <aside class="card">
             <div class="card-header">
               <h2 class="card-title">1. Elegi un caso de demo</h2>
-              <p class="card-subtitle">Tres historias listas para presentar frente a un cliente agro.</p>
+              <p class="card-subtitle">Cada pregunta ya tiene una decision sugerida asociada al lote.</p>
             </div>
             <div class="card-body field-stack">
               <div class="scenario-list" id="scenarioList">
@@ -1431,18 +1437,50 @@
             text: "En ambientes de humedad media se recomienda ajustar densidad a potencial del lote y evitar sobrepoblacion si el pronostico indica estres hidrico. La decision debe considerar hibrido, fecha y disponibilidad de agua."
           }
         ],
-        answer: {
-          title: "Ventana de siembra recomendada",
-          summary: "La recomendacion es sembrar cuando la temperatura del suelo se estabilice y no haya exceso de lluvia inmediato. Con humedad media, el lote A12 esta favorable pero requiere validar temperatura antes de entrar.",
-          steps: [
-            "Medir temperatura de suelo temprano y repetir al mediodia para confirmar estabilidad.",
-            "Si supera el umbral tecnico y el pronostico no marca lluvia intensa en 48 h, avanzar con siembra.",
-            "Ajustar densidad al potencial del lote para no forzar consumo de agua.",
-            "Registrar fecha, hibrido y condicion inicial para trazabilidad del agente."
-          ],
-          risk: "Medio",
-          confidence: "Alta"
-        }
+        decisions: [
+          {
+            title: "Ventana de siembra",
+            decision: "Sembrar si la temperatura del suelo se confirma estable",
+            summary: "Para A12, la decision depende de confirmar temperatura de suelo. La humedad esta en rango y la lluvia prevista no bloquea la siembra si no se intensifica.",
+            steps: [
+              "Medir temperatura de suelo antes de entrar con sembradora.",
+              "Si supera el umbral y no hay lluvia intensa en 48 h, avanzar con siembra.",
+              "Registrar fecha y condicion inicial del lote."
+            ],
+            reason: "La pregunta es sobre momento de siembra; por eso la decision se apoya en temperatura, humedad y pronostico.",
+            mlAction: "Sembrar",
+            risk: "Medio",
+            confidence: "Alta"
+          },
+          {
+            title: "Densidad recomendada",
+            decision: "Usar densidad moderada, no maxima",
+            summary: "Para A12, con humedad media, conviene ajustar densidad al potencial del lote y evitar sobrepoblacion si el pronostico puede limitar agua.",
+            steps: [
+              "Usar densidad objetivo conservadora para ambiente medio.",
+              "No subir densidad hasta confirmar recarga de humedad.",
+              "Revisar hibrido y distancia entre surcos antes de cerrar recomendacion."
+            ],
+            reason: "La pregunta es sobre densidad; la decision cambia de sembrar/no sembrar a cuanto ajustar la poblacion.",
+            mlAction: "Ajustar densidad",
+            risk: "Medio",
+            confidence: "Alta"
+          },
+          {
+            title: "Espera por suelo frio",
+            decision: "Esperar 24-48 h si la temperatura sigue baja",
+            summary: "Para A12, si el suelo no estabiliza temperatura, conviene esperar para reducir riesgo de emergencia despareja.",
+            steps: [
+              "Medir temperatura de suelo dos veces en el dia.",
+              "Esperar si la lectura sigue por debajo del umbral.",
+              "Reevaluar cuando el pronostico muestre estabilidad termica."
+            ],
+            reason: "La pregunta no es por humedad ni densidad: es por riesgo de suelo frio y emergencia irregular.",
+            mlAction: "Esperar",
+            risk: "Medio",
+            confidence: "Alta"
+          }
+        ]
       },
       soja: {
         label: "Soja",
@@ -1463,18 +1501,50 @@
             text: "Si la defoliacion crece rapidamente o se confirma presencia activa en sectores repetidos, activar visita tecnica y priorizar monitoreo en 24 horas. Evitar recomendaciones sin dato de estadio y nivel de dano."
           }
         ],
-        answer: {
-          title: "Alerta de plaga y scouting prioritario",
-          summary: "No conviene recomendar aplicacion solo por observacion aislada. Para B08, la decision clara es confirmar defoliacion, etapa y presencia activa antes de aplicar.",
-          steps: [
-            "Registrar sector, fotos y porcentaje estimado de defoliacion.",
-            "Hacer scouting por paño vertical en varios puntos del lote.",
-            "Si hay presencia activa y dano creciente, escalar a alerta operativa.",
-            "Consultar al agronomo con evidencia y recomendacion preliminar."
-          ],
-          risk: "Alto",
-          confidence: "Media"
-        }
+        decisions: [
+          {
+            title: "Defoliacion observada",
+            decision: "Hacer scouting antes de aplicar",
+            summary: "Para B08, la observacion visual no alcanza para aplicar. La decision es medir defoliacion, confirmar presencia activa y recien despues definir tratamiento.",
+            steps: [
+              "Registrar fotos y sectores con dano.",
+              "Hacer muestreo en varios puntos del lote.",
+              "Aplicar solo si el dano y presencia activa superan umbral."
+            ],
+            reason: "La pregunta es que hacer ante oruga visible; por eso la decision inmediata es confirmar evidencia, no aplicar automaticamente.",
+            mlAction: "Scouting",
+            risk: "Alto",
+            confidence: "Media"
+          },
+          {
+            title: "Umbral de alerta",
+            decision: "Escalar a alerta si el dano crece o se repite por sectores",
+            summary: "Para B08, la alerta operativa aparece cuando hay presencia activa y defoliacion consistente en mas de un sector.",
+            steps: [
+              "Comparar defoliacion entre sectores.",
+              "Revisar etapa del cultivo.",
+              "Escalar si la evolucion del dano es creciente."
+            ],
+            reason: "La pregunta es cuando alertar; por eso la decision se basa en umbral, repeticion y velocidad de avance.",
+            mlAction: "Alertar",
+            risk: "Alto",
+            confidence: "Media"
+          },
+          {
+            title: "Datos antes de aplicar",
+            decision: "No recomendar aplicacion hasta completar datos minimos",
+            summary: "Para B08, antes de sugerir aplicacion se necesitan etapa, porcentaje de defoliacion, presencia activa y sectores afectados.",
+            steps: [
+              "Cargar etapa fenologica.",
+              "Cargar porcentaje de defoliacion.",
+              "Confirmar presencia activa y ubicacion del dano."
+            ],
+            reason: "La pregunta es por informacion faltante; por eso la decision es bloquear recomendacion hasta completar datos.",
+            mlAction: "Completar datos",
+            risk: "Medio",
+            confidence: "Alta"
+          }
+        ]
       },
       trigo: {
         label: "Trigo",
@@ -1495,18 +1565,50 @@
             text: "Luego de lluvias y alta humedad, monitorear enfermedades foliares. La accion recomendada es visita de seguimiento si hay manchas activas y condiciones predisponentes."
           }
         ],
-        answer: {
-          title: "Priorizacion de nitrogeno con validacion",
-          summary: "El lote C21 requiere validacion de campo antes de refertilizar. La base indica combinar analisis, humedad y expectativa de rendimiento para evitar una decision cara con poca evidencia.",
-          steps: [
-            "Revisar analisis de suelo y objetivo de rendimiento.",
-            "Validar humedad disponible para que la aplicacion tenga respuesta.",
-            "Cruzar etapa fenologica con oportunidad de refertilizacion.",
-            "Crear recomendacion final solo si el agronomo confirma condicion del lote."
-          ],
-          risk: "Medio",
-          confidence: "Alta"
-        }
+        decisions: [
+          {
+            title: "Priorizacion de nitrogeno",
+            decision: "Validar nitrogeno antes de refertilizar",
+            summary: "Para C21, el analisis bajo justifica priorizar el lote, pero la decision final depende de humedad disponible y objetivo de rendimiento.",
+            steps: [
+              "Revisar analisis de suelo y objetivo de rendimiento.",
+              "Validar humedad disponible.",
+              "Priorizar aplicacion si ambos datos confirman respuesta probable."
+            ],
+            reason: "La pregunta es por priorizacion de nitrogeno; por eso la decision se centra en validar respuesta economica.",
+            mlAction: "Validar N",
+            risk: "Medio",
+            confidence: "Alta"
+          },
+          {
+            title: "Manchas foliares poslluvia",
+            decision: "Monitorear sanidad en 24-48 h",
+            summary: "Para C21, las manchas despues de lluvia requieren seguimiento sanitario antes de decidir tratamiento.",
+            steps: [
+              "Relevar hojas afectadas y distribucion.",
+              "Confirmar si las manchas estan activas.",
+              "Escalar al agronomo si aumentan o aparecen condiciones predisponentes."
+            ],
+            reason: "La pregunta es sanitaria, no nutricional; por eso la decision cambia a monitoreo de enfermedad foliar.",
+            mlAction: "Monitorear sanidad",
+            risk: "Medio",
+            confidence: "Media"
+          },
+          {
+            title: "Momento de refertilizacion",
+            decision: "Refertilizar solo dentro de ventana fenologica",
+            summary: "Para C21, conviene refertilizar si la etapa del cultivo permite respuesta y hay humedad para incorporar nitrogeno.",
+            steps: [
+              "Confirmar etapa fenologica.",
+              "Revisar humedad y pronostico cercano.",
+              "Aplicar si la ventana sigue abierta y el lote tiene potencial."
+            ],
+            reason: "La pregunta es por momento; por eso la decision depende de etapa, humedad y pronostico.",
+            mlAction: "Refertilizar",
+            risk: "Medio",
+            confidence: "Alta"
+          }
+        ]
       }
     };
 
@@ -1612,11 +1714,14 @@
       quickQuestions.innerHTML = "";
       KB[crop].questions.forEach((question) => {
         const btn = document.createElement("button");
-        btn.className = "quick";
+        btn.className = `quick${questionInput.value.trim() === question ? " active" : ""}`;
         btn.type = "button";
         btn.textContent = question;
         btn.addEventListener("click", () => {
           questionInput.value = question;
+          activeScenario = "";
+          document.querySelectorAll(".scenario-card").forEach((card) => card.classList.remove("active"));
+          renderQuestions();
           renderAnswer();
         });
         quickQuestions.appendChild(btn);
@@ -1646,16 +1751,22 @@
       return "good";
     }
 
+    function getDecision(crop, question) {
+      const data = KB[crop];
+      const index = data.questions.findIndex((item) => item === question);
+      return data.decisions[index >= 0 ? index : 0];
+    }
+
     function renderAnswer() {
       const crop = cropSelect.value;
       const stage = stageSelect.value;
       const plotId = plotSelect.value;
       const data = KB[crop];
-      const plot = PLOTS[plotId];
       const prediction = PREDICTIONS[plotId];
       const docs = retrieveDocs(crop, questionInput.value);
-      const answer = data.answer;
       const question = questionInput.value.trim();
+      const decision = getDecision(crop, question);
+      document.getElementById("predAction").textContent = decision.mlAction;
 
       queryEcho.innerHTML = `
         <strong>Pregunta del productor</strong>
@@ -1665,21 +1776,21 @@
       statusLine.innerHTML = `
         <span class="pill">Cultivo: ${data.label}</span>
         <span class="pill">Etapa: ${stage}</span>
-        <span class="pill ${riskClass(answer.risk)}">Riesgo: ${answer.risk}</span>
-        <span class="pill good">Confianza: ${answer.confidence}</span>
+        <span class="pill ${riskClass(decision.risk)}">Riesgo: ${decision.risk}</span>
+        <span class="pill good">Confianza: ${decision.confidence}</span>
         <span class="pill">Fabric ML: ${prediction.confidence}</span>
       `;
 
       answerBox.innerHTML = `
         <div class="decision-banner">
           <span>Decision sugerida para ${plotId}</span>
-          <strong>${decisionLabel(crop, plotId, plot.risk)}</strong>
+          <strong>${decision.decision}</strong>
         </div>
-        <h3>${answer.title}</h3>
-        <p class="answer-summary">${answer.summary}</p>
-        <ol>${answer.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
+        <h3>${decision.title}</h3>
+        <p class="answer-summary">${decision.summary}</p>
+        <ol>${decision.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
         <div class="ml-insight"><strong>Prediccion Fabric ML:</strong> ${prediction.insight}</div>
-        <p class="next-action"><strong>Por que:</strong> ${nextAction(crop, plotId, plot.risk)}</p>
+        <p class="next-action"><strong>Por que esta decision:</strong> ${decision.reason}</p>
       `;
       answerStamp.textContent = `${data.label} · ${plotId} · ${new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`;
 
@@ -1696,18 +1807,6 @@
       renderAnswer();
       answerPanel.scrollIntoView({ behavior: "smooth", block: "start" });
       showToast("Respuesta actualizada con fuentes recuperadas.");
-    }
-
-    function nextAction(crop, plotId, risk) {
-      if (risk === "Alto" || crop === "soja") return `hay riesgo alto de plaga y conviene confirmar evidencia en campo antes de aplicar insumo.`;
-      if (crop === "trigo") return `el modelo sugiere respuesta posible, pero el gasto depende de confirmar nitrogeno y humedad disponible.`;
-      return `la humedad es suficiente y la ventana es favorable si la temperatura del suelo se estabiliza.`;
-    }
-
-    function decisionLabel(crop, plotId, risk) {
-      if (risk === "Alto" || crop === "soja") return "Hacer scouting antes de aplicar";
-      if (crop === "trigo") return "Validar nitrogeno antes de refertilizar";
-      return "Sembrar si se confirma temperatura de suelo";
     }
 
     function applyScenario(scenarioId) {
@@ -1737,8 +1836,8 @@
         btn.classList.toggle("active", btn.dataset.plot === plotSelect.value);
       });
       renderSensors();
-      renderQuestions();
       questionInput.value = KB[cropSelect.value].questions[0];
+      renderQuestions();
       activeScenario = "";
       document.querySelectorAll(".scenario-card").forEach((card) => card.classList.remove("active"));
       renderAnswer();
@@ -1770,8 +1869,10 @@
     });
 
     cropSelect.addEventListener("change", () => {
-      renderQuestions();
       questionInput.value = KB[cropSelect.value].questions[0];
+      renderQuestions();
+      activeScenario = "";
+      document.querySelectorAll(".scenario-card").forEach((card) => card.classList.remove("active"));
       renderAnswer();
     });
     plotSelect.addEventListener("change", syncPlotFromSelect);
