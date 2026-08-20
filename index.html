@@ -463,9 +463,34 @@
       color: var(--cp-text-muted);
     }
 
+    .answer-panel {
+      position: sticky;
+      top: 18px;
+      border-color: var(--cp-accent);
+    }
+
     .answer-card {
       display: grid;
-      gap: 12px;
+      gap: 14px;
+    }
+
+    .answer-callout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--cp-accent);
+      border-radius: 0.625rem;
+      background: var(--cp-accent-soft);
+      color: var(--cp-text);
+      font-weight: 800;
+    }
+
+    .answer-callout span {
+      color: var(--cp-text-muted);
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .status-line {
@@ -500,17 +525,34 @@
     }
 
     .answer {
-      padding: 14px;
-      border: 1px solid var(--cp-border);
+      padding: 18px;
+      border: 2px solid var(--cp-accent);
       border-radius: 16px;
-      background: var(--cp-bg-elevated);
-      line-height: 1.5;
+      background:
+        linear-gradient(180deg, var(--cp-accent-soft), transparent 38%),
+        var(--cp-bg-elevated);
+      box-shadow: 0 0 0 4px var(--cp-accent-soft);
+      line-height: 1.55;
     }
 
     .answer h3 {
       margin: 0 0 10px;
-      font-size: 19px;
+      font-size: 22px;
       letter-spacing: -0.03em;
+    }
+
+    .answer-summary {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    .next-action {
+      margin: 14px 0 0;
+      padding: 12px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
     }
 
     .answer ol {
@@ -721,6 +763,10 @@
         grid-template-columns: 1fr;
       }
 
+      .answer-panel {
+        position: static;
+      }
+
       .map-overlay {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -872,12 +918,16 @@
             </div>
           </section>
 
-          <aside class="card">
+          <aside class="card answer-panel" id="answerPanel">
             <div class="card-header">
               <h2 class="card-title">Respuesta con fuentes</h2>
               <p class="card-subtitle">Simula RAG: recupera fragmentos de la base de conocimiento y genera recomendacion.</p>
             </div>
             <div class="card-body answer-card">
+              <div class="answer-callout">
+                Respuesta generada
+                <span id="answerStamp">Lista para usar</span>
+              </div>
               <div class="status-line" id="statusLine"></div>
               <div class="answer" id="answerBox"></div>
               <div>
@@ -1191,6 +1241,8 @@
     const questionInput = document.getElementById("questionInput");
     const quickQuestions = document.getElementById("quickQuestions");
     const answerBox = document.getElementById("answerBox");
+    const answerPanel = document.getElementById("answerPanel");
+    const answerStamp = document.getElementById("answerStamp");
     const sourceList = document.getElementById("sourceList");
     const statusLine = document.getElementById("statusLine");
     const flowBox = document.getElementById("flowBox");
@@ -1270,10 +1322,11 @@
 
       answerBox.innerHTML = `
         <h3>${answer.title}</h3>
-        <p>${answer.summary}</p>
+        <p class="answer-summary">${answer.summary}</p>
         <ol>${answer.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
-        <p><strong>Siguiente mejor accion:</strong> ${nextAction(crop, plotId, plot.risk)}</p>
+        <p class="next-action"><strong>Siguiente mejor accion:</strong> ${nextAction(crop, plotId, plot.risk)}</p>
       `;
+      answerStamp.textContent = `${data.label} · ${plotId} · ${new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`;
 
       sourceList.innerHTML = docs.map((doc) => `
         <div class="source">
@@ -1283,6 +1336,12 @@
       `).join("");
 
       flowBox.innerHTML = "";
+    }
+
+    function handleAsk() {
+      renderAnswer();
+      answerPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      showToast("Respuesta actualizada con fuentes recuperadas.");
     }
 
     function nextAction(crop, plotId, risk) {
@@ -1355,7 +1414,7 @@
     });
     plotSelect.addEventListener("change", syncPlotFromSelect);
     stageSelect.addEventListener("change", renderAnswer);
-    document.getElementById("askBtn").addEventListener("click", renderAnswer);
+    document.getElementById("askBtn").addEventListener("click", handleAsk);
     document.getElementById("activateFlow").addEventListener("click", activateFlow);
 
     renderQuestions();
