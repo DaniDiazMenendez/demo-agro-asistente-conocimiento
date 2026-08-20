@@ -66,6 +66,38 @@
       --cp-sheen: rgba(255, 255, 255, 0.04);
       --cp-highlight: rgba(253, 142, 161, 0.12);
     }
+    :root {
+      --cp-bg: #fff7ed;
+      --cp-bg-elevated: #fffbeb;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #fff1d6;
+      --cp-border: #f4c27a;
+      --cp-border-strong: #d97706;
+      --cp-accent: #ea580c;
+      --cp-accent-hover: #c2410c;
+      --cp-accent-soft: rgba(234, 88, 12, 0.14);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #65a30d;
+      --cp-warning: #d97706;
+      --cp-link: #b45309;
+      --cp-highlight: rgba(250, 204, 21, 0.2);
+    }
+    html[data-theme="dark"] {
+      --cp-bg: #2b1b0f;
+      --cp-bg-elevated: #23170d;
+      --cp-surface: #241a12;
+      --cp-surface-soft: #332315;
+      --cp-border: #6f4216;
+      --cp-border-strong: #f59e0b;
+      --cp-accent: #fbbf24;
+      --cp-accent-hover: #fcd34d;
+      --cp-accent-soft: rgba(251, 191, 36, 0.16);
+      --cp-accent-fg: #1a1209;
+      --cp-success: #bef264;
+      --cp-warning: #fbbf24;
+      --cp-link: #facc15;
+      --cp-highlight: rgba(234, 88, 12, 0.16);
+    }
 
     * {
       box-sizing: border-box;
@@ -75,8 +107,10 @@
       margin: 0;
       font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
       background:
+        linear-gradient(135deg, var(--cp-bg), var(--cp-bg-elevated) 45%, var(--cp-highlight)),
         radial-gradient(circle at top left, var(--cp-accent-soft), transparent 34rem),
         radial-gradient(circle at 85% 20%, var(--cp-highlight), transparent 28rem),
+        radial-gradient(circle at 55% 90%, var(--cp-accent-soft), transparent 26rem),
         var(--cp-bg);
       color: var(--cp-text);
     }
@@ -111,7 +145,9 @@
       padding: 28px;
       border: 1px solid var(--cp-border);
       border-radius: 16px;
-      background: var(--cp-panel-strong);
+      background:
+        linear-gradient(135deg, var(--cp-panel-strong), var(--cp-highlight)),
+        var(--cp-panel-strong);
       box-shadow: var(--cp-shadow);
     }
 
@@ -356,7 +392,7 @@
 
     .field-map {
       position: relative;
-      min-height: 520px;
+      min-height: 640px;
       overflow: hidden;
       border-radius: 16px;
       border: 1px solid var(--cp-border);
@@ -370,6 +406,7 @@
       inset: 0;
       background:
         repeating-linear-gradient(42deg, transparent 0 28px, var(--cp-highlight) 29px 31px),
+        repeating-linear-gradient(92deg, var(--cp-accent-soft) 0 10px, transparent 10px 28px),
         radial-gradient(circle at 20% 20%, var(--cp-accent-soft), transparent 18rem),
         radial-gradient(circle at 74% 62%, var(--cp-accent-soft), transparent 16rem);
       opacity: 0.9;
@@ -380,13 +417,37 @@
       display: grid;
       place-items: center;
       border: 1px solid var(--cp-border-strong);
-      background: var(--cp-panel);
+      background:
+        repeating-linear-gradient(92deg, var(--cp-sheen) 0 8px, transparent 8px 20px),
+        linear-gradient(135deg, var(--cp-highlight), var(--cp-accent-soft)),
+        var(--cp-panel);
       color: var(--cp-text);
       border-radius: 28px 12px 30px 12px;
       box-shadow: var(--cp-shadow);
       text-align: center;
       cursor: pointer;
       transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .plot::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: inherit;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 9px, var(--cp-sheen) 9px 11px),
+        radial-gradient(circle at 28% 28%, var(--cp-highlight), transparent 36%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .plot > span {
+      position: relative;
+      z-index: 1;
+      padding: 8px 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-panel-strong);
     }
 
     .plot:hover,
@@ -408,32 +469,56 @@
 
     .plot-a {
       left: 7%;
-      top: 10%;
+      top: 23%;
       width: 35%;
       height: 30%;
     }
 
+    .plot-a {
+      background:
+        repeating-linear-gradient(90deg, var(--cp-highlight) 0 10px, var(--cp-accent-soft) 10px 24px),
+        var(--cp-panel);
+    }
+
     .plot-b {
       right: 8%;
-      top: 14%;
+      top: 25%;
       width: 40%;
       height: 24%;
       border-radius: 16px 34px 16px 30px;
     }
 
+    .plot-b {
+      background:
+        repeating-linear-gradient(35deg, var(--cp-accent-soft) 0 12px, var(--cp-highlight) 12px 28px),
+        var(--cp-panel);
+    }
+
     .plot-c {
       left: 12%;
-      bottom: 12%;
+      bottom: 16%;
       width: 37%;
       height: 30%;
       border-radius: 34px 14px 22px 18px;
     }
 
+    .plot-c {
+      background:
+        repeating-linear-gradient(115deg, var(--cp-highlight) 0 9px, var(--cp-accent-soft) 9px 22px),
+        var(--cp-panel);
+    }
+
     .plot-d {
       right: 10%;
-      bottom: 11%;
+      bottom: 15%;
       width: 34%;
       height: 34%;
+    }
+
+    .plot-d {
+      background:
+        repeating-radial-gradient(circle at 40% 45%, var(--cp-highlight) 0 8px, var(--cp-accent-soft) 8px 20px),
+        var(--cp-panel);
     }
 
     .map-overlay {
@@ -461,6 +546,45 @@
 
     .sensor small {
       color: var(--cp-text-muted);
+    }
+
+    .prediction-panel {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .prediction-card {
+      padding: 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-panel-strong);
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+
+    .prediction-card strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -0.04em;
+    }
+
+    .prediction-card span {
+      display: block;
+      color: var(--cp-text-muted);
+      font-size: 11px;
+    }
+
+    .prediction-card small {
+      display: block;
+      margin-top: 4px;
+      color: var(--cp-text-soft);
+      font-size: 11px;
     }
 
     .answer-panel {
@@ -491,6 +615,21 @@
       color: var(--cp-text-muted);
       font-size: 12px;
       font-weight: 700;
+    }
+
+    .query-echo {
+      padding: 12px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+      line-height: 1.45;
+    }
+
+    .query-echo strong {
+      display: block;
+      color: var(--cp-text);
+      margin-bottom: 4px;
     }
 
     .status-line {
@@ -555,6 +694,14 @@
       background: var(--cp-surface);
     }
 
+    .ml-insight {
+      margin: 12px 0 0;
+      padding: 12px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-highlight);
+    }
+
     .answer ol {
       margin: 10px 0 0;
       padding-left: 20px;
@@ -567,6 +714,22 @@
     .source-list {
       display: grid;
       gap: 8px;
+    }
+
+    .query-history {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .history-item {
+      padding: 9px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface-soft);
+      color: var(--cp-text-muted);
+      font-size: 12px;
+      line-height: 1.35;
     }
 
     .source {
@@ -770,6 +933,13 @@
       .map-overlay {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .prediction-panel {
+        position: relative;
+        inset: auto;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 12px;
+      }
     }
 
     @media (max-width: 720px) {
@@ -810,8 +980,8 @@
           <h1>Asistente de conocimiento agronomico para decisiones en campo</h1>
           <p class="lead">
             Demo interactiva para mostrar como una cooperativa o productor centraliza guias de cultivo,
-            clima, insumos y fichas de plagas. El agente responde con fuentes, recomienda acciones y
-            activa un flujo operativo. Porque buscar PDF en plena recorrida de lote es una prueba de paciencia, no de agronomia.
+            clima, insumos, fichas de plagas y predicciones de Fabric Machine Learning. El agente responde con fuentes,
+            muestra pronosticos por lote y activa un flujo operativo. Porque buscar PDF en plena recorrida de lote es una prueba de paciencia, no de agronomia.
           </p>
           <div class="hero-actions">
             <button class="btn primary" data-tab-target="campo">Probar asistente</button>
@@ -823,8 +993,8 @@
           <div>
             <h2 class="card-title">Dolor que resuelve</h2>
             <p class="card-subtitle">
-              El conocimiento esta disperso entre guias tecnicas, notas de clima, recomendaciones de insumos
-              y criterio del agronomo. La demo convierte eso en respuestas accionables.
+              El conocimiento esta disperso entre guias tecnicas, clima, insumos, observaciones de campo y modelos predictivos.
+              La demo convierte eso en respuestas accionables por lote.
             </p>
           </div>
           <div class="metric-grid">
@@ -898,6 +1068,12 @@
           </aside>
 
           <section class="field-map" aria-label="Mapa de lotes">
+            <div class="prediction-panel" aria-label="Predicciones Fabric Machine Learning">
+              <div class="prediction-card"><strong id="predYield">8.6 t/ha</strong><span>rendimiento estimado</span><small>Fabric ML · confianza 87%</small></div>
+              <div class="prediction-card"><strong id="predWater">Medio</strong><span>estres hidrico 10 dias</span><small>Clima + humedad suelo</small></div>
+              <div class="prediction-card"><strong id="predPest">Bajo</strong><span>riesgo de plaga</span><small>Scoutings + clima</small></div>
+              <div class="prediction-card"><strong id="predAction">Sembrar</strong><span>accion recomendada</span><small>Modelo agronomico</small></div>
+            </div>
             <button class="plot plot-a active" data-plot="A12">
               <span><strong>Lote A12</strong><span>Maiz · humedad media</span></span>
             </button>
@@ -921,12 +1097,16 @@
           <aside class="card answer-panel" id="answerPanel">
             <div class="card-header">
               <h2 class="card-title">Respuesta con fuentes</h2>
-              <p class="card-subtitle">Simula RAG: recupera fragmentos de la base de conocimiento y genera recomendacion.</p>
+              <p class="card-subtitle">Recupera conocimiento agronomico, lo combina con predicciones por lote y genera recomendacion.</p>
             </div>
             <div class="card-body answer-card">
               <div class="answer-callout">
-                Respuesta generada
+                Respuesta de conocimiento
                 <span id="answerStamp">Lista para usar</span>
+              </div>
+              <div class="query-echo" id="queryEcho">
+                <strong>Consulta respondida</strong>
+                Esperando pregunta del productor.
               </div>
               <div class="status-line" id="statusLine"></div>
               <div class="answer" id="answerBox"></div>
@@ -936,6 +1116,10 @@
               </div>
               <button class="btn primary" id="activateFlow">Activar playbook de respuesta</button>
               <div class="flow" id="flowBox"></div>
+              <div>
+                <h3 class="card-title">Historial de consultas</h3>
+                <div class="query-history" id="queryHistory"></div>
+              </div>
             </div>
           </aside>
         </div>
@@ -1067,7 +1251,7 @@
               <li>Mostrar el problema: informacion agronomica dispersa entre documentos, clima e insumos.</li>
               <li>Seleccionar un lote y una etapa del cultivo.</li>
               <li>Preguntar: "Cuando conviene sembrar maiz?" o "Que hago con oruga en soja?".</li>
-              <li>Mostrar respuesta con fuente recuperada y accion recomendada.</li>
+              <li>Mostrar respuesta con fuente recuperada, prediccion Fabric ML y accion recomendada.</li>
               <li>Activar playbook: tarea tecnica, alerta o recomendacion de insumo.</li>
               <li>Cerrar con tablero ejecutivo: impacto, alertas y adopcion.</li>
             </ol>
@@ -1080,6 +1264,7 @@
               <li>Guia de soja: plagas, umbrales de defoliacion y monitoreo.</li>
               <li>Guia de trigo: nitrogeno, enfermedades foliares y oportunidad de aplicacion.</li>
               <li>Ficha del lote: pH, humedad util, lluvia prevista, riesgo y observaciones.</li>
+              <li>Predicciones por lote: rendimiento estimado, estres hidrico, riesgo de plaga y accion sugerida.</li>
             </ul>
           </article>
 
@@ -1096,6 +1281,7 @@
             <ul>
               <li><strong>Copilot Studio:</strong> experiencia conversacional, temas, acciones y canales.</li>
               <li><strong>Azure AI Foundry:</strong> seleccion de modelo, evaluacion y gestion de aplicaciones generativas.</li>
+              <li><strong>Microsoft Fabric ML:</strong> entrenamiento y scoring sobre clima, sensores, historicos de rendimiento y scouting.</li>
               <li><strong>RAG:</strong> indexacion de guias y recuperacion de fragmentos antes de generar respuesta.</li>
               <li><strong>Acciones:</strong> tareas, alertas o notificaciones a equipos de campo.</li>
             </ul>
@@ -1235,6 +1421,41 @@
       D03: { crop: "maiz", stage: "vegetativo", ph: "6.5", hum: "35%", rain: "12 mm", risk: "Bajo" }
     };
 
+    const PREDICTIONS = {
+      A12: {
+        yield: "8.6 t/ha",
+        water: "Medio",
+        pest: "Bajo",
+        action: "Sembrar",
+        confidence: "87%",
+        insight: "Fabric ML estima buena emergencia si se confirma temperatura de suelo. La ventana agricola es favorable, pero conviene evitar entrada si la lluvia supera lo previsto."
+      },
+      B08: {
+        yield: "3.1 t/ha",
+        water: "Alto",
+        pest: "Alto",
+        action: "Scouting",
+        confidence: "82%",
+        insight: "El modelo combina humedad baja, reportes de defoliacion y clima seco: recomienda visita tecnica antes de decidir aplicacion."
+      },
+      C21: {
+        yield: "4.9 t/ha",
+        water: "Bajo",
+        pest: "Medio",
+        action: "Validar N",
+        confidence: "85%",
+        insight: "Prediccion de respuesta positiva a refertilizacion solo si el analisis confirma nitrogeno bajo y hay humedad disponible."
+      },
+      D03: {
+        yield: "9.1 t/ha",
+        water: "Bajo",
+        pest: "Bajo",
+        action: "Monitorear",
+        confidence: "90%",
+        insight: "El lote de ensayo muestra buena condicion por riego calibrado; el modelo sugiere monitorear evapotranspiracion y no sobreactuar."
+      }
+    };
+
     const cropSelect = document.getElementById("cropSelect");
     const plotSelect = document.getElementById("plotSelect");
     const stageSelect = document.getElementById("stageSelect");
@@ -1243,10 +1464,13 @@
     const answerBox = document.getElementById("answerBox");
     const answerPanel = document.getElementById("answerPanel");
     const answerStamp = document.getElementById("answerStamp");
+    const queryEcho = document.getElementById("queryEcho");
+    const queryHistory = document.getElementById("queryHistory");
     const sourceList = document.getElementById("sourceList");
     const statusLine = document.getElementById("statusLine");
     const flowBox = document.getElementById("flowBox");
     const toast = document.getElementById("toast");
+    const recentQueries = [];
 
     function setTab(tabId) {
       document.querySelectorAll(".tab").forEach((tab) => {
@@ -1296,6 +1520,15 @@
       document.getElementById("sensorHum").textContent = plot.hum;
       document.getElementById("sensorRain").textContent = plot.rain;
       document.getElementById("sensorRisk").textContent = plot.risk;
+      renderPredictions();
+    }
+
+    function renderPredictions() {
+      const prediction = PREDICTIONS[plotSelect.value];
+      document.getElementById("predYield").textContent = prediction.yield;
+      document.getElementById("predWater").textContent = prediction.water;
+      document.getElementById("predPest").textContent = prediction.pest;
+      document.getElementById("predAction").textContent = prediction.action;
     }
 
     function riskClass(risk) {
@@ -1310,20 +1543,29 @@
       const plotId = plotSelect.value;
       const data = KB[crop];
       const plot = PLOTS[plotId];
+      const prediction = PREDICTIONS[plotId];
       const docs = retrieveDocs(crop, questionInput.value);
       const answer = data.answer;
+      const question = questionInput.value.trim();
+
+      queryEcho.innerHTML = `
+        <strong>Consulta respondida</strong>
+        ${question}
+      `;
 
       statusLine.innerHTML = `
         <span class="pill">Cultivo: ${data.label}</span>
         <span class="pill">Etapa: ${stage}</span>
         <span class="pill ${riskClass(answer.risk)}">Riesgo: ${answer.risk}</span>
         <span class="pill good">Confianza: ${answer.confidence}</span>
+        <span class="pill">Fabric ML: ${prediction.confidence}</span>
       `;
 
       answerBox.innerHTML = `
         <h3>${answer.title}</h3>
         <p class="answer-summary">${answer.summary}</p>
         <ol>${answer.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
+        <div class="ml-insight"><strong>Prediccion Fabric ML:</strong> ${prediction.insight}</div>
         <p class="next-action"><strong>Siguiente mejor accion:</strong> ${nextAction(crop, plotId, plot.risk)}</p>
       `;
       answerStamp.textContent = `${data.label} · ${plotId} · ${new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`;
@@ -1335,7 +1577,18 @@
         </div>
       `).join("");
 
+      addQueryHistory(question, plotId, prediction.action);
       flowBox.innerHTML = "";
+    }
+
+    function addQueryHistory(question, plotId, action) {
+      if (!question) return;
+      const entry = `${plotId}: ${question} → ${action}`;
+      if (recentQueries[0] !== entry) {
+        recentQueries.unshift(entry);
+        recentQueries.splice(4);
+      }
+      queryHistory.innerHTML = recentQueries.map((item) => `<div class="history-item">${item}</div>`).join("");
     }
 
     function handleAsk() {

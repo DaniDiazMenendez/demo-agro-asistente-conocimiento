@@ -1,6 +1,6 @@
 # AGRO-01 | Asistente de conocimiento agronomico
 
-Demo estatica e interactiva para GitHub Pages. Simula un asistente de conocimiento agronomico construido con Copilot Studio y Azure AI Foundry usando un patron RAG sobre guias de cultivo, clima, fichas de plagas e informacion de lotes.
+Demo estatica e interactiva para GitHub Pages. Simula un asistente de conocimiento agronomico construido con Copilot Studio y Azure AI Foundry usando un patron RAG sobre guias de cultivo, clima, fichas de plagas e informacion de lotes, con una capa de predicciones inspirada en Microsoft Fabric Machine Learning.
 
 ## Caso de uso
 
@@ -14,10 +14,11 @@ Demo estatica e interactiva para GitHub Pages. Simula un asistente de conocimien
 
 1. Seleccion de cultivo, lote y etapa.
 2. Preguntas agronomicas frecuentes.
-3. Respuestas con fuentes recuperadas de una base de conocimiento simulada.
-4. Activacion de playbook operativo: tarea, notificacion y seguimiento.
-5. Vista ejecutiva con alertas, impacto y adopcion.
-6. Guion de demo y documentacion oficial.
+3. Respuestas visibles con fuentes recuperadas de una base de conocimiento simulada.
+4. Capa predictiva por lote: rendimiento estimado, estres hidrico, riesgo de plaga y accion sugerida.
+5. Activacion de playbook operativo: tarea, notificacion y seguimiento.
+6. Vista ejecutiva con alertas, impacto y adopcion.
+7. Guion de demo y documentacion oficial.
 
 ## Documentacion oficial
 
